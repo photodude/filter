@@ -208,7 +208,7 @@ class InputFilter
 		{
 			case 'INT':
 			case 'INTEGER':
-				$pattern = '/[-+]?[0-9]+/u';
+				$pattern = '/[-+]?[0-9]+/';
 
 				if (is_array($source))
 				{
@@ -217,20 +217,20 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						preg_match($pattern, (string) $eachString, $matches);
+						preg_match($pattern, (string) $eachString, $matches, PREG_OFFSET_CAPTURE);
 						$result[] = isset($matches[0]) ? (int) $matches[0] : 0;
 					}
 				}
 				else
 				{
-					preg_match($pattern, (string) $source, $matches);
+					preg_match($pattern, (string) $source, $matches, PREG_OFFSET_CAPTURE);
 					$result = isset($matches[0]) ? (int) $matches[0] : 0;
 				}
 
 				break;
 
 			case 'UINT':
-				$pattern = '/[-+]?[0-9]+/u';
+				$pattern = '/[-+]?[0-9]+/';
 
 				if (is_array($source))
 				{
@@ -239,13 +239,13 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						preg_match($pattern, (string) $eachString, $matches);
+						preg_match($pattern, (string) $eachString, $matches, PREG_OFFSET_CAPTURE);
 						$result[] = isset($matches[0]) ? abs((int) $matches[0]) : 0;
 					}
 				}
 				else
 				{
-					preg_match($pattern, (string) $source, $matches);
+					preg_match($pattern, (string) $source, $matches, PREG_OFFSET_CAPTURE);
 					$result = isset($matches[0]) ? abs((int) $matches[0]) : 0;
 				}
 
@@ -253,7 +253,7 @@ class InputFilter
 
 			case 'FLOAT':
 			case 'DOUBLE':
-				$pattern = '/[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?/u';
+				$pattern = '/[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?/';
 
 				if (is_array($source))
 				{
@@ -262,13 +262,13 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						preg_match($pattern, (string) $eachString, $matches);
+						preg_match($pattern, (string) $eachString, $matches, PREG_OFFSET_CAPTURE);
 						$result[] = isset($matches[0]) ? (float) $matches[0] : 0;
 					}
 				}
 				else
 				{
-					preg_match($pattern, (string) $source, $matches);
+					preg_match($pattern, (string) $source, $matches, PREG_OFFSET_CAPTURE);
 					$result = isset($matches[0]) ? (float) $matches[0] : 0;
 				}
 
@@ -295,7 +295,7 @@ class InputFilter
 				break;
 
 			case 'WORD':
-				$pattern = '/[^A-Z_]/iu';
+				$pattern = '/[^A-Z_]/i';
 
 				if (is_array($source))
 				{
@@ -304,18 +304,18 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString);
+						$result[] = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source);
+					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
 				}
 
 				break;
 
 			case 'ALNUM':
-				$pattern = '/[^A-Z0-9]/iu';
+				$pattern = '/[^A-Z0-9]/i';
 
 				if (is_array($source))
 				{
@@ -324,18 +324,18 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString);
+						$result[] = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source);
+					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
 				}
 
 				break;
 
 			case 'CMD':
-				$pattern = '/[^A-Z0-9_\.-]/iu';
+				$pattern = '/[^A-Z0-9_\.-]/i';
 
 				if (is_array($source))
 				{
@@ -344,20 +344,20 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$cleaned  = (string) preg_replace($pattern, '', $eachString);
+						$cleaned  = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
 						$result[] = ltrim($cleaned, '.');
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source);
+					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
 					$result = ltrim($result, '.');
 				}
 
 				break;
 
 			case 'BASE64':
-				$pattern = '/[^A-Z0-9\/+=]/iu';
+				$pattern = '/[^A-Z0-9\/+=]/i';
 
 				if (is_array($source))
 				{
@@ -366,12 +366,12 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString);
+						$result[] = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source);
+					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
 				}
 
 				break;
@@ -417,7 +417,7 @@ class InputFilter
 				break;
 
 			case 'PATH':
-				$pattern = '/^[A-Za-z0-9_\/-]+[A-Za-z0-9_\.-]*([\\\\\/][A-Za-z0-9_-]+[A-Za-z0-9_\.-]*)*$/u';
+				$pattern = '/^[A-Za-z0-9_\/-]+[A-Za-z0-9_\.-]*([\\\\\/][A-Za-z0-9_-]+[A-Za-z0-9_\.-]*)*$/';
 
 				if (is_array($source))
 				{
@@ -426,13 +426,13 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						preg_match($pattern, (string) $eachString, $matches);
+						preg_match($pattern, (string) $eachString, $matches, PREG_OFFSET_CAPTURE);
 						$result[] = isset($matches[0]) ? (string) $matches[0] : '';
 					}
 				}
 				else
 				{
-					preg_match($pattern, $source, $matches);
+					preg_match($pattern, $source, $matches, PREG_OFFSET_CAPTURE);
 					$result = isset($matches[0]) ? (string) $matches[0] : '';
 				}
 
@@ -461,7 +461,7 @@ class InputFilter
 				break;
 
 			case 'USERNAME':
-				$pattern = '/[\x00-\x1F\x7F<>"\'%&]/u';
+				$pattern = '/[\x00-\x1F\x7F<>"\'%&]/';
 
 				if (is_array($source))
 				{
@@ -470,12 +470,12 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString);
+						$result[] = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source);
+					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
 				}
 
 				break;
@@ -558,7 +558,7 @@ class InputFilter
 			$temp = $source;
 			$source = $this->cleanTags($source);
 		}
-		while ($temp != $source);
+		while ($temp !== $source);
 
 		return $source;
 	}
@@ -654,7 +654,10 @@ class InputFilter
 			 * OR no tagname
 			 * OR remove if xssauto is on and tag is blacklisted
 			 */
-			if ((!preg_match("/^[a-z][a-z0-9]*$/iu", $tagName)) || (!$tagName) || ((in_array(strtolower($tagName), $this->tagBlacklist)) && ($this->xssAuto)))
+			if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName, PREG_OFFSET_CAPTURE))
+			    	|| (!$tagName) 
+			    	|| ((in_array(strtolower($tagName), $this->tagBlacklist))
+				&& ($this->xssAuto)))
 			{
 				$postTag = StringHelper::substr($postTag, ($tagLength + 2));
 				$tagOpen_start = StringHelper::strpos($postTag, '<');
@@ -832,7 +835,7 @@ class InputFilter
 
 			// Remove all "non-regular" attribute names
 			// AND blacklisted attributes
-			if ((!preg_match('/[a-z]*$/iu', $attrSubSet[0]))
+			if ((!preg_match('/[a-z]*$/i', $attrSubSet[0], PREG_OFFSET_CAPTURE))
 				|| (($this->xssAuto) && ((in_array(strtolower($attrSubSet[0]), $this->attrBlacklist))
 				|| (substr($attrSubSet[0], 0, 2) == 'on'))))
 			{
@@ -852,7 +855,7 @@ class InputFilter
 			$attrSubSet[1] = str_replace('&#', '', $attrSubSet[1]);
 
 			// Strip normal newline within attr value
-			$attrSubSet[1] = preg_replace('/[\n\r]/u', '', $attrSubSet[1]);
+			$attrSubSet[1] = preg_replace('/[\n\r]/', '', $attrSubSet[1], PREG_OFFSET_CAPTURE);
 
 			// Strip double quotes
 			$attrSubSet[1] = str_replace('"', '', $attrSubSet[1]);
@@ -982,7 +985,7 @@ class InputFilter
 	protected function stripCssExpressions($source)
 	{
 		// Strip any comments out (in the form of /*...*/)
-		$test = preg_replace('#\/\*.*\*\/#U', '', $source);
+		$test = preg_replace('#\/\*.*\*\/#U', '', $source, PREG_OFFSET_CAPTURE);
 
 		// Test for :expression
 		if (!stripos($test, ':expression'))
@@ -993,7 +996,7 @@ class InputFilter
 
 		// At this point, we have stripped out the comments and have found :expression
 		// Test stripped string for :expression followed by a '('
-		if (preg_match_all('#:expression\s*\(#', $test, $matches))
+		if (preg_match_all('#:expression\s*\(#', $test, $matches, PREG_OFFSET_CAPTURE))
 		{
 			// If found, remove :expression
 			return str_ireplace(':expression', '', $test);
