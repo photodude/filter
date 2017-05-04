@@ -32,5 +32,5 @@ before_script:
   - composer update $COMPOSER_FLAGS
 
 script:
-  - vendor/bin/phpunit
-  - if [ "$RUN_PHPCS" == "yes" ]; then vendor/bin/phpcs -p --debug --report=full --extensions=php --standard=.travis/phpcs/Joomla/ruleset.xml src/; fi;
+  - vendor/bin/phpunit --debug
+  - if [ "$RUN_PHPCS" == "yes" ]; then vendor/bin/phpcs -p --report=full --extensions=php --standard=.travis/phpcs/Joomla/ruleset.xml src/; fi;
