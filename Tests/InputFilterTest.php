@@ -623,7 +623,7 @@ class InputFilterTest extends TestCase
 			'tracker15673' => array(
 				'string',
 				$input2,
-				'TBD - need a first run',
+				$input2,
 				'From generic cases'
 			),
 		);
