@@ -208,7 +208,7 @@ class InputFilter
 		{
 			case 'INT':
 			case 'INTEGER':
-				$pattern = '/[-+]?[0-9]+/';
+				$pattern = '/[-+]?[0-9]+/u';
 
 				if (is_array($source))
 				{
@@ -230,7 +230,7 @@ class InputFilter
 				break;
 
 			case 'UINT':
-				$pattern = '/[-+]?[0-9]+/';
+				$pattern = '/[-+]?[0-9]+/u';
 
 				if (is_array($source))
 				{
@@ -253,7 +253,7 @@ class InputFilter
 
 			case 'FLOAT':
 			case 'DOUBLE':
-				$pattern = '/[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?/';
+				$pattern = '/[-+]?[0-9]+(\.[0-9]+)?([eE][-+]?[0-9]+)?/u';
 
 				if (is_array($source))
 				{
@@ -295,7 +295,7 @@ class InputFilter
 				break;
 
 			case 'WORD':
-				$pattern = '/[^A-Z_]/i';
+				$pattern = '/[^A-Z_]/iu';
 
 				if (is_array($source))
 				{
@@ -315,7 +315,7 @@ class InputFilter
 				break;
 
 			case 'ALNUM':
-				$pattern = '/[^A-Z0-9]/i';
+				$pattern = '/[^A-Z0-9]/iu';
 
 				if (is_array($source))
 				{
@@ -335,7 +335,7 @@ class InputFilter
 				break;
 
 			case 'CMD':
-				$pattern = '/[^A-Z0-9_\.-]/i';
+				$pattern = '/[^A-Z0-9_\.-]/iu';
 
 				if (is_array($source))
 				{
@@ -357,7 +357,7 @@ class InputFilter
 				break;
 
 			case 'BASE64':
-				$pattern = '/[^A-Z0-9\/+=]/i';
+				$pattern = '/[^A-Z0-9\/+=]/iu';
 
 				if (is_array($source))
 				{
@@ -417,7 +417,7 @@ class InputFilter
 				break;
 
 			case 'PATH':
-				$pattern = '/^[A-Za-z0-9_\/-]+[A-Za-z0-9_\.-]*([\\\\\/][A-Za-z0-9_-]+[A-Za-z0-9_\.-]*)*$/';
+				$pattern = '/^[A-Za-z0-9_\/-]+[A-Za-z0-9_\.-]*([\\\\\/][A-Za-z0-9_-]+[A-Za-z0-9_\.-]*)*$/u';
 
 				if (is_array($source))
 				{
@@ -461,7 +461,7 @@ class InputFilter
 				break;
 
 			case 'USERNAME':
-				$pattern = '/[\x00-\x1F\x7F<>"\'%&]/';
+				$pattern = '/[\x00-\x1F\x7F<>"\'%&]/u';
 
 				if (is_array($source))
 				{
@@ -654,7 +654,7 @@ class InputFilter
 			 * OR no tagname
 			 * OR remove if xssauto is on and tag is blacklisted
 			 */
-			if ((!preg_match("/^[a-z][a-z0-9]*$/i", $tagName)) || (!$tagName) || ((in_array(strtolower($tagName), $this->tagBlacklist)) && ($this->xssAuto)))
+			if ((!preg_match("/^[a-z][a-z0-9]*$/iu", $tagName)) || (!$tagName) || ((in_array(strtolower($tagName), $this->tagBlacklist)) && ($this->xssAuto)))
 			{
 				$postTag = StringHelper::substr($postTag, ($tagLength + 2));
 				$tagOpen_start = StringHelper::strpos($postTag, '<');
@@ -832,7 +832,7 @@ class InputFilter
 
 			// Remove all "non-regular" attribute names
 			// AND blacklisted attributes
-			if ((!preg_match('/[a-z]*$/i', $attrSubSet[0]))
+			if ((!preg_match('/[a-z]*$/iu', $attrSubSet[0]))
 				|| (($this->xssAuto) && ((in_array(strtolower($attrSubSet[0]), $this->attrBlacklist))
 				|| (substr($attrSubSet[0], 0, 2) == 'on'))))
 			{
@@ -852,7 +852,7 @@ class InputFilter
 			$attrSubSet[1] = str_replace('&#', '', $attrSubSet[1]);
 
 			// Strip normal newline within attr value
-			$attrSubSet[1] = preg_replace('/[\n\r]/', '', $attrSubSet[1]);
+			$attrSubSet[1] = preg_replace('/[\n\r]/u', '', $attrSubSet[1]);
 
 			// Strip double quotes
 			$attrSubSet[1] = str_replace('"', '', $attrSubSet[1]);
