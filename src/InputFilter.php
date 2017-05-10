@@ -592,11 +592,11 @@ class InputFilter
 	 */
 	protected function cleanTags($source)
 	{
-		// First, pre-process this for invalid characters inside attribute values
-		$source = $this->stripInvalidUtf8($source);
-
 		// Second, pre-process this for illegal characters inside attribute values
 		$source = $this->escapeAttributeValues($source);
+
+		// First, pre-process this for invalid characters inside attribute values
+		$source = $this->stripInvalidUtf8($source);
 
 		// In the beginning we don't really have a tag, so everything is postTag
 		$preTag = null;
