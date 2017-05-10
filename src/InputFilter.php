@@ -209,12 +209,12 @@ class InputFilter
 			$tempSource = array();
 
 			// Iterate through the array
-			foreach ($source as $eachString)
+			foreach ($source as $key => $eachString)
 			{
-				$tempSource[] = $this->stripInvalidUtf8($eachString);
+				$tempSource[$key] = $this->stripInvalidUtf8($eachString);
 			}
 
-			$source = $tempSource;
+			$source = (array) $tempSource;
 		}
 		else
 		{
@@ -233,10 +233,10 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
 						preg_match($pattern, (string) $eachString, $matches);
-						$result[] = isset($matches[0]) ? (int) $matches[0] : 0;
+						$result[$key] = isset($matches[0]) ? (int) $matches[0] : 0;
 					}
 				}
 				else
@@ -255,10 +255,10 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
 						preg_match($pattern, (string) $eachString, $matches);
-						$result[] = isset($matches[0]) ? abs((int) $matches[0]) : 0;
+						$result[$key] = isset($matches[0]) ? abs((int) $matches[0]) : 0;
 					}
 				}
 				else
@@ -278,10 +278,10 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
 						preg_match($pattern, (string) $eachString, $matches);
-						$result[] = isset($matches[0]) ? (float) $matches[0] : 0;
+						$result[$key] = isset($matches[0]) ? (float) $matches[0] : 0;
 					}
 				}
 				else
@@ -300,9 +300,9 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
-						$result[] = (bool) $eachString;
+						$result[$key] = (bool) $eachString;
 					}
 				}
 				else
@@ -320,9 +320,9 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString);
+						$result[$key] = (string) preg_replace($pattern, '', $eachString);
 					}
 				}
 				else
@@ -340,9 +340,9 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString);
+						$result[$key] = (string) preg_replace($pattern, '', $eachString);
 					}
 				}
 				else
@@ -360,10 +360,10 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
 						$cleaned  = (string) preg_replace($pattern, '', $eachString);
-						$result[] = ltrim($cleaned, '.');
+						$result[$key] = ltrim($cleaned, '.');
 					}
 				}
 				else
@@ -382,9 +382,9 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString);
+						$result[$key] = (string) preg_replace($pattern, '', $eachString);
 					}
 				}
 				else
@@ -400,9 +400,9 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
-						$result[] = (string) $this->remove($this->decode((string) $eachString));
+						$result[$key] = (string) $this->remove($this->decode((string) $eachString));
 					}
 				}
 				else
@@ -418,9 +418,9 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
-						$result[] = (string) $this->remove((string) $eachString);
+						$result[$key] = (string) $this->remove((string) $eachString);
 					}
 				}
 				else
@@ -442,10 +442,10 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
 						preg_match($pattern, (string) $eachString, $matches);
-						$result[] = isset($matches[0]) ? (string) $matches[0] : '';
+						$result[$key] = isset($matches[0]) ? (string) $matches[0] : '';
 					}
 				}
 				else
@@ -462,11 +462,11 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
 						$cleaned  = (string) trim($eachString);
 						$cleaned  = StringHelper::trim($cleaned, chr(0xE3) . chr(0x80) . chr(0x80));
-						$result[] = StringHelper::trim($cleaned, chr(0xC2) . chr(0xA0));
+						$result[$key] = StringHelper::trim($cleaned, chr(0xC2) . chr(0xA0));
 					}
 				}
 				else
@@ -486,9 +486,9 @@ class InputFilter
 					$result = array();
 
 					// Iterate through the array
-					foreach ($source as $eachString)
+					foreach ($source as $key => $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString);
+						$result[$key] = (string) preg_replace($pattern, '', $eachString);
 					}
 				}
 				else
