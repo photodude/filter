@@ -203,25 +203,13 @@ class InputFilter
 	 */
 	public function clean($source, $type = 'string')
 	{
-/*
-		// First, pre-process this for invalid characters inside attribute values
-		if (is_array($source) && strtoupper($type) !== 'RAW')
-		{
-			$tempSource = array();
 
-			// Iterate through the array
-			foreach ($source as $key => $eachString)
-			{
-				$tempSource[$key] = $this->stripInvalidUtf8($eachString);
-			}
-
-			$source = (array) $tempSource;
-		}
-		else
+		// First, pre-process this for invalid characters inside attribute values unless type raw
+		if (strtoupper($type) !== 'RAW')
 		{
-			$source = $this->stripInvalidUtf8($source);
+			$source = $this->replaceInvalidUtf8($source);
 		}
-*/
+
 		// Handle the type constraint cases
 		switch (strtoupper($type))
 		{
@@ -597,7 +585,7 @@ class InputFilter
 		$source = $this->escapeAttributeValues($source);
 
 		// First, pre-process this for invalid characters inside attribute values
-		$source = $this->stripInvalidUtf8($source);
+		$source = $this->replaceInvalidUtf8($source);
 
 		// In the beginning we don't really have a tag, so everything is postTag
 		$preTag = null;
@@ -1030,31 +1018,52 @@ class InputFilter
 	/**
 	 * Remove invalid UTF-8 bytes and replace it with U+FFFD
 	 *
-	 * @param   string  $source  The source string.
+	 * @param   mixed   $source  Input string/array-of-string to replace Invalid UTF-8
 	 *
 	 * @return  string  Filtered string
 	 *
 	 * @since   __DEPLOY_VERSION__
 	 */
-	protected function stripInvalidUtf8($source)
+	protected function replaceInvalidUtf8($source)
 	{
-		// Workaround for php 5.3
-		if (!defined('ENT_SUBSTITUTE'))
+		// PHP mbstring and iconv local configuration
+		if (version_compare(PHP_VERSION, '5.6', '>='))
 		{
-			define('ENT_SUBSTITUTE', ENT_IGNORE);
+			@ini_set('default_charset', 'UTF-8');
 		}
+		else
+		{
+			// Check if mbstring extension is loaded and attempt to load it if not present except for windows
+			if (extension_loaded('mbstring'))
+			{
+				@ini_set('mbstring.internal_encoding', 'UTF-8');
+				@ini_set('mbstring.http_input', 'UTF-8');
+				@ini_set('mbstring.http_output', 'UTF-8');
+			}
+			// Same for iconv
+			if (function_exists('iconv'))
+			{
+				iconv_set_encoding('internal_encoding', 'UTF-8');
+				iconv_set_encoding('input_encoding', 'UTF-8');
+				iconv_set_encoding('output_encoding', 'UTF-8');
+			}
+		}
+
+		// REPLACEMENT CHARACTER (U+FFFD)
+		mb_substitute_character(0xFFFD);
 
 		// Remove invalid UTF-8 bytes and replace it with U+FFFD
 		if (is_array($source))
 		{
-			foreach ($source as $k => $v)
+			foreach ($source as $key => $value)
 			{
-				$source[$k] = htmlspecialchars_decode(htmlspecialchars($v, ENT_SUBSTITUTE, 'UTF-8'));
+				$source[$key] = mb_convert_encoding($value, 'UTF-8', 'UTF-8');
+				
 			}
 		}
 		else
 		{
-			$source = htmlspecialchars_decode(htmlspecialchars($source, ENT_SUBSTITUTE, 'UTF-8'));
+			$source = mb_convert_encoding($source, 'UTF-8', 'UTF-8');
 		}
 
 		return $source;
