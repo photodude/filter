@@ -203,6 +203,23 @@ class InputFilter
 	 */
 	public function clean($source, $type = 'string')
 	{
+		// First, pre-process this for invalid characters inside attribute values
+				if (is_array($source))
+				{
+					$tempSource = array();
+
+					// Iterate through the array
+					foreach ($source as $eachString)
+					{
+						$tempSource[] = $this->stripInvalidUtf8($source);
+					}
+					$source = $tempSource;
+				}
+				else
+				{
+					$source = $this->stripInvalidUtf8($source);
+				}
+
 		// Handle the type constraint cases
 		switch (strtoupper($type))
 		{
@@ -574,7 +591,10 @@ class InputFilter
 	 */
 	protected function cleanTags($source)
 	{
-		// First, pre-process this for illegal characters inside attribute values
+		// First, pre-process this for invalid characters inside attribute values
+		$source = $this->stripInvalidUtf8($source);
+
+		// Second, pre-process this for illegal characters inside attribute values
 		$source = $this->escapeAttributeValues($source);
 
 		// In the beginning we don't really have a tag, so everything is postTag
@@ -1000,6 +1020,39 @@ class InputFilter
 		{
 			// If found, remove :expression
 			return str_ireplace(':expression', '', $test);
+		}
+
+		return $source;
+	}
+
+	/**
+	 * Remove invalid UTF-8 bytes and replace it with U+FFFD
+	 *
+	 * @param   string  $source  The source string.
+	 *
+	 * @return  string  Filtered string
+	 *
+	 * @since   __DEPLOY_VERSION__
+	 */
+	protected function stripInvalidUtf8($source)
+	{
+		// Workaround for php 5.3
+		if (!defined('ENT_SUBSTITUTE'))
+		{
+			define('ENT_SUBSTITUTE', ENT_IGNORE);
+		}
+
+		// Remove invalid UTF-8 bytes and replace it with U+FFFD
+		if (is_array($source))
+		{
+			foreach ($source as $k => $v)
+			{
+				$source[$k] = htmlspecialchars_decode(htmlspecialchars($v, ENT_SUBSTITUTE, 'UTF-8'));
+			}
+		}
+		else
+		{
+			$source = htmlspecialchars_decode(htmlspecialchars($source, ENT_SUBSTITUTE, 'UTF-8'));
 		}
 
 		return $source;
