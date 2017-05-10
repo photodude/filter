@@ -211,7 +211,7 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$tempSource[] = $this->stripInvalidUtf8($source);
+						$tempSource[] = $this->stripInvalidUtf8($eachString);
 					}
 					$source = $tempSource;
 				}
