@@ -203,6 +203,7 @@ class InputFilter
 	 */
 	public function clean($source, $type = 'string')
 	{
+/*
 		// First, pre-process this for invalid characters inside attribute values
 		if (is_array($source) && strtoupper($type) !== 'RAW')
 		{
@@ -220,7 +221,7 @@ class InputFilter
 		{
 			$source = $this->stripInvalidUtf8($source);
 		}
-
+*/
 		// Handle the type constraint cases
 		switch (strtoupper($type))
 		{
