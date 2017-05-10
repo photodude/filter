@@ -204,21 +204,22 @@ class InputFilter
 	public function clean($source, $type = 'string')
 	{
 		// First, pre-process this for invalid characters inside attribute values
-				if (is_array($source))
-				{
-					$tempSource = array();
+		if (is_array($source) && strtoupper($type) !== 'RAW')
+		{
+			$tempSource = array();
 
-					// Iterate through the array
-					foreach ($source as $eachString)
-					{
-						$tempSource[] = $this->stripInvalidUtf8($eachString);
-					}
-					$source = $tempSource;
-				}
-				else
-				{
-					$source = $this->stripInvalidUtf8($source);
-				}
+			// Iterate through the array
+			foreach ($source as $eachString)
+			{
+				$tempSource[] = $this->stripInvalidUtf8($eachString);
+			}
+
+			$source = $tempSource;
+		}
+		else
+		{
+			$source = $this->stripInvalidUtf8($source);
+		}
 
 		// Handle the type constraint cases
 		switch (strtoupper($type))
@@ -234,13 +235,13 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						preg_match($pattern, (string) $eachString, $matches, PREG_OFFSET_CAPTURE);
+						preg_match($pattern, (string) $eachString, $matches);
 						$result[] = isset($matches[0]) ? (int) $matches[0] : 0;
 					}
 				}
 				else
 				{
-					preg_match($pattern, (string) $source, $matches, PREG_OFFSET_CAPTURE);
+					preg_match($pattern, (string) $source, $matches);
 					$result = isset($matches[0]) ? (int) $matches[0] : 0;
 				}
 
@@ -256,13 +257,13 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						preg_match($pattern, (string) $eachString, $matches, PREG_OFFSET_CAPTURE);
+						preg_match($pattern, (string) $eachString, $matches);
 						$result[] = isset($matches[0]) ? abs((int) $matches[0]) : 0;
 					}
 				}
 				else
 				{
-					preg_match($pattern, (string) $source, $matches, PREG_OFFSET_CAPTURE);
+					preg_match($pattern, (string) $source, $matches);
 					$result = isset($matches[0]) ? abs((int) $matches[0]) : 0;
 				}
 
@@ -279,13 +280,13 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						preg_match($pattern, (string) $eachString, $matches, PREG_OFFSET_CAPTURE);
+						preg_match($pattern, (string) $eachString, $matches);
 						$result[] = isset($matches[0]) ? (float) $matches[0] : 0;
 					}
 				}
 				else
 				{
-					preg_match($pattern, (string) $source, $matches, PREG_OFFSET_CAPTURE);
+					preg_match($pattern, (string) $source, $matches);
 					$result = isset($matches[0]) ? (float) $matches[0] : 0;
 				}
 
@@ -321,12 +322,12 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
+						$result[] = (string) preg_replace($pattern, '', $eachString);
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
+					$result = (string) preg_replace($pattern, '', $source);
 				}
 
 				break;
@@ -341,12 +342,12 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
+						$result[] = (string) preg_replace($pattern, '', $eachString);
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
+					$result = (string) preg_replace($pattern, '', $source);
 				}
 
 				break;
@@ -361,13 +362,13 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$cleaned  = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
+						$cleaned  = (string) preg_replace($pattern, '', $eachString);
 						$result[] = ltrim($cleaned, '.');
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
+					$result = (string) preg_replace($pattern, '', $source);
 					$result = ltrim($result, '.');
 				}
 
@@ -383,12 +384,12 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
+						$result[] = (string) preg_replace($pattern, '', $eachString);
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
+					$result = (string) preg_replace($pattern, '', $source);
 				}
 
 				break;
@@ -443,13 +444,13 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						preg_match($pattern, (string) $eachString, $matches, PREG_OFFSET_CAPTURE);
+						preg_match($pattern, (string) $eachString, $matches);
 						$result[] = isset($matches[0]) ? (string) $matches[0] : '';
 					}
 				}
 				else
 				{
-					preg_match($pattern, $source, $matches, PREG_OFFSET_CAPTURE);
+					preg_match($pattern, $source, $matches);
 					$result = isset($matches[0]) ? (string) $matches[0] : '';
 				}
 
@@ -487,12 +488,12 @@ class InputFilter
 					// Iterate through the array
 					foreach ($source as $eachString)
 					{
-						$result[] = (string) preg_replace($pattern, '', $eachString, PREG_OFFSET_CAPTURE);
+						$result[] = (string) preg_replace($pattern, '', $eachString);
 					}
 				}
 				else
 				{
-					$result = (string) preg_replace($pattern, '', $source, PREG_OFFSET_CAPTURE);
+					$result = (string) preg_replace($pattern, '', $source);
 				}
 
 				break;
@@ -875,7 +876,7 @@ class InputFilter
 			$attrSubSet[1] = str_replace('&#', '', $attrSubSet[1]);
 
 			// Strip normal newline within attr value
-			$attrSubSet[1] = preg_replace('/[\n\r]/', '', $attrSubSet[1], PREG_OFFSET_CAPTURE);
+			$attrSubSet[1] = preg_replace('/[\n\r]/', '', $attrSubSet[1]);
 
 			// Strip double quotes
 			$attrSubSet[1] = str_replace('"', '', $attrSubSet[1]);
@@ -956,7 +957,7 @@ class InputFilter
 
 		// Process each portion based on presence of =" and "<space>, "/>, or ">
 		// See if there are any more attributes to process
-		while (preg_match('#<[^>]*?=\s*?(\"|\')#s', $remainder, $matches, PREG_OFFSET_CAPTURE))
+		while (preg_match('#<[^>]*?=\s*?(\"|\')#s', $remainder, $matches))
 		{
 			// Get the portion before the attribute value
 			$quotePosition = $matches[0][1];
@@ -968,7 +969,7 @@ class InputFilter
 			$pregMatch = ($quote == '"') ? '#(\"\s*/\s*>|\"\s*>|\"\s+|\"$)#' : "#(\'\s*/\s*>|\'\s*>|\'\s+|\'$)#";
 
 			// Get the portion after attribute value
-			if (preg_match($pregMatch, StringHelper::substr($remainder, $nextBefore), $matches, PREG_OFFSET_CAPTURE))
+			if (preg_match($pregMatch, StringHelper::substr($remainder, $nextBefore), $matches))
 			{
 				// We have a closing quote
 				$nextAfter = $nextBefore + $matches[0][1];
@@ -1005,7 +1006,7 @@ class InputFilter
 	protected function stripCssExpressions($source)
 	{
 		// Strip any comments out (in the form of /*...*/)
-		$test = preg_replace('#\/\*.*\*\/#U', '', $source, PREG_OFFSET_CAPTURE);
+		$test = preg_replace('#\/\*.*\*\/#U', '', $source);
 
 		// Test for :expression
 		if (!stripos($test, ':expression'))
@@ -1016,7 +1017,7 @@ class InputFilter
 
 		// At this point, we have stripped out the comments and have found :expression
 		// Test stripped string for :expression followed by a '('
-		if (preg_match_all('#:expression\s*\(#', $test, $matches, PREG_OFFSET_CAPTURE))
+		if (preg_match_all('#:expression\s*\(#', $test, $matches))
 		{
 			// If found, remove :expression
 			return str_ireplace(':expression', '', $test);
