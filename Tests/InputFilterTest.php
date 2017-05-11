@@ -619,7 +619,8 @@ class InputFilterTest extends TestCase
 			'tracker15673' => array(
 				'string',
 				$input2,
-				'not sure yet, never got this to run :-) ',
+				'презентация)
+Елфимова О.Т. Разработка системы отделения космического аппарата Метеор-М в системе MSC.Adamsдиплом',
 				'From generic cases'
 			),
 		);
